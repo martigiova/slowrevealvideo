@@ -45,6 +45,7 @@ Desktop app for Windows and macOS that applies a smooth “slow reveal” pan fr
 - **Letterboxed clips**: bump `Zoom factor` slightly to hide black bars, or trim later in your NLE.
 - **ffmpeg errors**: ensure `ffmpeg` is installed and reachable from the same terminal where the launcher runs.
 - **Performance**: keep the machine plugged in and export to a fast SSD to avoid dropped frames.
+- **ModuleNotFoundError for moviepy**: delete the `.venv` folder inside the bundle and relaunch the script; the launcher will recreate the env and reinstall dependencies using the correct interpreter.
 
 ---
 
