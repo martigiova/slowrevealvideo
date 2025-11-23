@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slowrevealvideo"
+version = "0.1.0"
+description = "Batch video slow-reveal processor with a cross-platform GUI"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "moviepy>=1.0.3",
+    "imageio-ffmpeg>=0.4.9",
+]
+
+[project.scripts]
+slowreveal = "slowreveal.app:run"
+
+[tool.setuptools.packages.find]
+where = ["src"]
