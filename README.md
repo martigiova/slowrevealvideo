@@ -1,78 +1,87 @@
 # Slow Reveal Video Batch Tool
 
-Applicazione desktop cross-platform (macOS e Windows) che permette di caricare più video verticali e applicare un effetto “slow reveal” dal basso verso l’alto, simulando un movimento di camera progressivo con zoom controllato.
+App desktop per Windows e macOS che applica automaticamente un effetto “slow reveal” dal basso verso l’alto su interi batch di video verticali. Carica tutte le clip, scegli la cartella di export e lascia che l’app aggiusti il movimento di camera con zoom progressivo ed easing controllato.
 
-## Requisiti
+---
 
-- Python 3.10 o superiore
-- `ffmpeg` installato e disponibile nel `PATH` (MoviePy ne fa uso dietro le quinte)
+## Step 1 – Scarica il build pronto
+1. Apri l’ultima esecuzione riuscita del workflow *Build SlowRevealApp* su GitHub Actions: https://github.com/martigiova/slowrevealvideo/actions
+2. Accedi con il tuo account GitHub (gli artifact richiedono una sessione autenticata).
+3. Nella sezione **Artifacts** scarica il pacchetto adatto:
+   - `SlowRevealVideo_windows.zip` per Windows
+   - `SlowRevealVideo_macOS.zip` per macOS (se disponibile)
 
-## Installazione rapida
+## Step 2 – Estrai lo ZIP
+1. Vai nella cartella dei download e trova il file ZIP appena scaricato.
+2. Estrai tutto il contenuto (su alcuni browser potresti dover estrarre due volte se il ZIP contiene una cartella annidata).
+3. All’interno troverai:
+   - `SlowRevealVideo.exe` (oppure `SlowRevealVideo.app` su Mac)
+   - `ffmpeg`/`ffprobe` già inclusi
+   - `README.txt` con scorciatoie e FAQ
+   - Cartella `exports/` vuota dove finiscono i video elaborati
+   - Eventuali clip di esempio nella cartella `samples/`
 
+## Step 3 – Avvia l’applicazione
+1. Su Windows fai doppio clic su `SlowRevealVideo.exe`.
+2. Se SmartScreen o Gatekeeper mostrano un avviso, clicca **More info → Run anyway** (o *Apri comunque* su macOS). Il binario non è firmato, quindi l’avviso è normale.
+3. Mantieni aperta la cartella dell’app mentre lavori: il programma ha bisogno dei file `ffmpeg` affiancati.
+
+## Step 4 – Carica i video verticali
+1. Premi **Aggiungi video…** e seleziona tutte le clip `.mp4`, `.mov`, `.mkv`, ecc. che vuoi elaborare (anche 20+ alla volta).
+2. Rimuovi eventuali clip errate con **Rimuovi selezionati** oppure **Svuota lista** per ripartire da zero.
+3. Il log segnalerà se una clip non è verticale; viene comunque elaborata ma riceverai un ⚠️ di promemoria.
+
+## Step 5 – Imposta cartella di export e parametri
+- **Cartella di destinazione**: di default è la cartella dell’app. Clicca **Scegli cartella…** per esportare su un SSD veloce o su una cartella condivisa.
+- **Zoom factor (>= 1.1)**: quanto “stringe” il crop nel tempo. Valori tra 1.6 e 2.2 funzionano per la maggior parte dei Reels/TikTok.
+- **Easing power**: controlla la curva di animazione (0.8–1.0 per reveal graduale; < 0.8 per partenza veloce).
+- **Suffisso output**: testo aggiunto al nome file, es. `_slowreveal` o `_zoom`.
+
+## Step 6 – Avvia la conversione
+1. Clicca **Avvia elaborazione**.
+2. Segui la barra di avanzamento e il log per ogni clip (`✅ clip.mov → clip_slowreveal.mp4`).
+3. Al termine apri la cartella di export: troverai i nuovi video già pronti per Premiere/CapCut.
+
+## Suggerimenti & Troubleshooting
+- **Batch grandi (50+ clip)**: spezzali in blocchi da 20–25 se lavori su laptop.
+- **Clip con bande nere**: aumenta lo `Zoom factor` o rifinisci successivamente in editing.
+- **ffmpeg non trovato**: non spostare gli eseguibili inclusi; tieni tutto nella stessa cartella estratta.
+- **Prestazioni migliori**: lavori più veloci su SSD NVMe e con alimentazione collegata.
+
+---
+
+## Modalità sviluppatore
+
+### Requisiti
+- Python 3.10+
+- `ffmpeg` presente nel `PATH`
+
+### Setup locale
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # su Windows: .venv\Scripts\activate
+source .venv/bin/activate        # su Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-## Avvio dell’interfaccia grafica
-
-```bash
 python -m slowreveal
 ```
 
-### Funzionalità principali
-
-- Caricamento multiplo di file video (`.mp4`, `.mov`, `.mkv`, ecc.)
-- Selezione della cartella di destinazione degli export
-- Parametri regolabili:
-  - `Zoom factor`: controlla quanto stringere l’inquadratura (valori > 1)
-  - `Easing power`: gestisce la curva di movimento (valori < 1 velocizzano l’inizio)
-  - `Suffisso output`: testo aggiunto al nome file esportato
-- Log in tempo reale, con segnalazione di eventuali clip non verticali
-
-## Creare un eseguibile scaricabile
-
-> Nota: per distribuire file “scaricabili” è consigliato generare gli eseguibili con [PyInstaller](https://pyinstaller.org/). I passaggi devono essere ripetuti separatamente su macOS e Windows, così da produrre binari nativi per ciascuna piattaforma.
-
-### macOS (.app o binario)
+### Creare build distribuibili
+Esegui i comandi sul sistema di destinazione (Windows per `.exe`, macOS per `.app`).
 
 ```bash
 python -m pip install --upgrade pyinstaller
 pyinstaller --noconfirm --windowed --onefile \
-  --name SlowRevealApp \
+  --name SlowRevealVideo \
   src/slowreveal/app.py
 ```
 
-- Il risultato si trova in `dist/SlowRevealApp`. Potrai zipparlo e condividerlo.
-- Per una classica app bundle (`.app`) ometti `--onefile`.
+Output in `dist/SlowRevealVideo*`. Comprimi la cartella insieme agli eseguibili `ffmpeg`/`ffprobe` se vuoi fornire un pacchetto plug-and-play.
 
-### Windows (.exe)
-
-Esegui dal prompt con ambiente virtuale attivo:
-
-```powershell
-python -m pip install --upgrade pyinstaller
-pyinstaller --noconfirm --windowed --onefile `
-  --name SlowRevealApp `
-  src/slowreveal/app.py
-```
-
-- Il file finale `SlowRevealApp.exe` sarà in `dist\`.
-- Distribuiscilo insieme alla cartella `ffmpeg` se gli utenti non hanno ffmpeg installato.
-
-## Struttura del progetto
-
+### Struttura principale
 ```
 src/slowreveal/
-├── __init__.py              # metadata del pacchetto
-├── __main__.py              # entry point `python -m slowreveal`
-├── app.py                   # interfaccia Tkinter
-└── processor.py             # logica di crop dinamico con MoviePy
+├── __main__.py      # entry point `python -m slowreveal`
+├── app.py           # interfaccia Tkinter con batch UI
+└── processor.py     # logica di zoom progressivo + MoviePy
 ```
 
-## Suggerimenti
-
-- Per ottenere un effetto più drammatico aumenta `Zoom factor` (es. 2.0).
-- Usa `Easing power < 1` per far partire più velocemente il movimento (stile reveal).
-- I video orizzontali vengono comunque elaborati ma riceverai un avviso nel log.
+Per un effetto più marcato aumenta `Zoom factor`; per reveal rapidi imposta `Easing power < 1`. I video orizzontali vengono comunque processati, ma il log avvisa così puoi decidere se scartarli.
