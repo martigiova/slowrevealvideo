@@ -18,7 +18,7 @@ def _ensure_runtime_dependencies() -> None:
     missing: List[str] = []
 
     try:
-        import moviepy.editor  # noqa: F401  # pragma: no cover - runtime only
+        import moviepy.video.io.VideoFileClip  # noqa: F401  # pragma: no cover - runtime only
     except ModuleNotFoundError:
         missing.append(required_specs[0])
 
@@ -38,11 +38,11 @@ def _ensure_runtime_dependencies() -> None:
             ) from exc
 
         importlib.invalidate_caches()
-        for name in ("moviepy", "moviepy.editor", "imageio_ffmpeg"):
+        for name in ("moviepy", "moviepy.video", "moviepy.video.io.VideoFileClip", "imageio_ffmpeg"):
             sys.modules.pop(name, None)
 
     # Final validation so we fail early with a clear message.
-    for module_name in ("moviepy.editor", "imageio_ffmpeg"):
+    for module_name in ("moviepy.video.io.VideoFileClip", "imageio_ffmpeg"):
         try:
             importlib.import_module(module_name)
         except ModuleNotFoundError as exc:  # pragma: no cover
