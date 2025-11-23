@@ -20,7 +20,7 @@ Desktop app for Windows and macOS that applies a smooth “slow reveal” pan fr
    - `README.txt` with the same quick instructions
 
 ## Step 3 – Launch the application
-1. **Windows**: double-click `Start SlowRevealVideo.bat`. The script creates `.venv`, installs dependencies, and launches the Tkinter UI. First run may take a minute while pip downloads MoviePy.
+1. **Windows**: double-click `Start SlowRevealVideo.bat`. The script creates `.venv`, installs dependencies, and launches the Tkinter UI. First run may take a minute while pip downloads MoviePy (the app now auto-installs anything missing).
 2. **macOS**: double-click `Start SlowRevealVideo.command` (after `chmod +x`). It performs the same automated setup.
 3. Keep the folder open while working—the launchers expect to be run from that directory so they can find the bundled package.
 
@@ -37,7 +37,7 @@ Desktop app for Windows and macOS that applies a smooth “slow reveal” pan fr
 
 ## Step 6 – Convert the batch
 1. Hit **Start processing**.
-2. Follow the progress bar and log entries (`✅ clip.mov → clip_slowreveal.mp4`) as each clip finishes.
+2. Follow the progress bar and log entries (`✅ clip.mov → clip_slowreveal.mp4`) as each clip finishes. If a dependency is missing, the console will display `[SlowReveal] Installing missing dependencies …` once and then reopen the GUI.
 3. Open the export folder to grab the ready-to-edit MP4 files for Premiere, CapCut, or DaVinci.
 
 ## Tips & Troubleshooting
