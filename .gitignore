@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Downloads
+downloads/
+
+# OS/Editor noise
+.DS_Store
+Thumbs.db
+*.log
